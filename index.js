@@ -17,13 +17,16 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(cors());
-io = require("socket.io")(server, {
+
+io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
-    credentials: true,
   },
-  transports: ["websocket"],
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello world");
 });
 //Start socket
 io.on("connection", (socket) => {
