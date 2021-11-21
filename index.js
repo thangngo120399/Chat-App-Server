@@ -1,5 +1,8 @@
 const express = require("express");
-const socketio = require("socket.io");
+// const socketio = require("socket.io");
+import { Server } from "socket.io";
+import cors from "cors";
+
 const http = require("http");
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require("./users.js");
@@ -9,9 +12,16 @@ const PORT = process.env.PORT || 5000;
 const router = require("./router");
 
 const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
 
+const server = http.createServer(app);
+
+app.use(cors());
+io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 //Start socket
 io.on("connection", (socket) => {
   socket.on("join", ({ name, room }, callback) => {
